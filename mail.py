@@ -1,27 +1,29 @@
+import os
 import smtplib
 import ssl
 from email.message import EmailMessage
 
-# ==== Configuration ====
+import pool
+
+
 sender_email = "buzztroll@gmail.com"
-app_password = "sslm qdso ghyt wncn"
+app_password = os.getenv('SHIRK_POOL_EMAIL_PW')
 receiver_email = "buzztroll@gmail.com"
 
 image_path = "temperature_plot.png"
-temperature = 72.5  # Example: read this dynamically from a sensor
+temperature = pool.normalized_temperature_reading(reading_count=1)
 
-# ==== Create the email ====
 msg = EmailMessage()
 msg["From"] = sender_email
 msg["To"] = receiver_email
-msg["Subject"] = "Pool Pi Temperature Report"
+msg["Subject"] = "Daily Shirk Pool Tem:qperature"
 
 msg.set_content(f"The current temperature is {temperature:.1f} °F.\nAttached is the image.")
 
 # Attach the image
 with open(image_path, "rb") as f:
     img_data = f.read()
-    msg.add_attachment(img_data, maintype="image", subtype="jpeg", filename="picture.jpg")
+    msg.add_attachment(img_data, maintype="image", subtype="jpeg", filename="temperature_plot.png")
 
 # ==== Send the email ====
 context = ssl.create_default_context()
