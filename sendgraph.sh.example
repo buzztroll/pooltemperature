@@ -1,0 +1,11 @@
+#!/bin/bash
+
+set -ex
+
+export SHIRK_POOL_EMAIL_PW=
+
+cd /home/bresnaha/Dev/pooltemperature
+. venv/bin/activate
+
+python3 graph.py
+python3 mail.py
