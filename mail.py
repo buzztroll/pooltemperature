@@ -16,7 +16,7 @@ temperature = pool.normalized_temperature_reading(reading_count=1)
 msg = EmailMessage()
 msg["From"] = sender_email
 msg["To"] = receiver_email
-msg["Subject"] = "Daily Shirk Pool Tem:qperature"
+msg["Subject"] = "Shirk Pool Daily Temperature"
 
 msg.set_content(f"The current temperature is {temperature:.1f} °F.\nAttached is the image.")
 

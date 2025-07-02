@@ -20,7 +20,7 @@ def make_graph():
 
     fig, ax = plt.subplots(figsize=(10, 5))
 
-    ax.plot(df_filtered["timestamp"], df_filtered["temperature"], marker='o', linestyle='-')
+    ax.plot(df_filtered["timestamp"], df_filtered["temperature"], marker='.', linestyle='-')
 
     ax.set_ylim(50, 100)
 
