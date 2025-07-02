@@ -26,7 +26,7 @@ def make_graph():
 
     ax.set_xlim(start_day, latest_day + timedelta(days=1))
 
-    ax.xaxis.set_major_locator(mdates.DayLocator())
+    ax.xaxis.set_major_locator(mdates.HourLocator(interval=12))
     ax.xaxis.set_major_formatter(mdates.DateFormatter('%a %m-%d', tz=df_filtered["timestamp"].dt.tz))
 
     ax.set_title("Temperature Over the Last 5 Days")
