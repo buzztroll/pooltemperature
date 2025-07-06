@@ -68,7 +68,7 @@ def get_outdoor_temp(reading_count=8):
             humidity = dht_device.humidity
             humidity_list.append(humidity)
 
-            print("Temp:{:.1f} C / {:.1f} F    Humidity: {}%".format(temperature_c, temperature_f, humidity))
+            logging.info("Temp:{:.1f} C / {:.1f} F    Humidity: {}%".format(temperature_c, temperature_f, humidity))
             time.sleep(0.5)
     except RuntimeError as err:
         print(err.args[0])
