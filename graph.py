@@ -20,7 +20,8 @@ def make_graph():
 
     fig, ax = plt.subplots(figsize=(10, 5))
 
-    ax.plot(df_filtered["timestamp"], df_filtered["temperature"], marker=',', linestyle='-')
+    ax.plot(df_filtered["timestamp"], df_filtered["temperature"], label="pool", marker=',', linestyle='-', color='blue')
+    ax.plot(df_filtered["timestamp"], df_filtered["outdoor"], label="outdoor", marker='.', linestyle='-', color='green')
 
     ax.set_ylim(60, 95)
 
@@ -32,9 +33,16 @@ def make_graph():
     ax.set_title("Temperature Over the Last 5 Days")
     ax.set_xlabel("Date (Chicago Time)")
     ax.set_ylabel("Temperature (°F)")
+
+    # ax2 = ax.twinx()
+    # ax2.plot(df_filtered["timestamp"], df_filtered["humidity"], label="humidity", linestyle='--', color='orange')
+    # ax2.set_ylabel("Humidity (%)", color='orange')
+    # ax2.tick_params(axis='y', labelcolor='orange')
+
     plt.xticks(rotation=45)
     ax.grid(True)
 
+    plt.legend()
     plt.tight_layout()
     plt.savefig("temperature_plot.png", dpi=300)
 
