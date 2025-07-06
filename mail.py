@@ -11,7 +11,7 @@ app_password = os.getenv('SHIRK_POOL_EMAIL_PW')
 receiver_email = "buzztroll@gmail.com, cindyconnelly@hotmail.com"
 
 image_path = "temperature_plot.png"
-temperature = pool.normalized_temperature_reading(reading_count=1)
+temperature = pool.get_pool_temp(reading_count=1)
 
 msg = EmailMessage()
 msg["From"] = sender_email

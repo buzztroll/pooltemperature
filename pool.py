@@ -1,12 +1,15 @@
 #!/usr/bin/env python
 
 import logging
-import os
 import glob
 import time
 import datetime
 import statistics
+import adafruit_dht
+import board
 
+
+dht_device = adafruit_dht.DHT22(board.D17)
 
 logging.basicConfig(
     level=logging.INFO,
@@ -15,7 +18,21 @@ logging.basicConfig(
 )
 
 
-def normalized_temperature_reading(reading_count=8, decimals=1):
+def normalize_list(temp_list):
+    mean = statistics.mean(temp_list)
+    if len(temp_list) < 5:
+        return mean
+    stddev = statistics.stdev(temp_list)
+
+    logging.info(f"{temp_list} {mean} {stddev}")
+    filtered = [x for x in temp_list if abs(x - mean) <= stddev]
+    if not filtered:
+        return float('nan')
+
+    return statistics.mean(temp_list)
+
+
+def get_pool_temp(reading_count=8):
     device = glob.glob("/sys/bus/w1/devices/" + "28*")[0] + "/w1_slave"
 
     temp_list = []
@@ -34,23 +51,36 @@ def normalized_temperature_reading(reading_count=8, decimals=1):
             logging.info(f"temp {far}")
             time.sleep(3)
 
-    mean = statistics.mean(temp_list)
-    if reading_count < 5:
-        return mean
-    stddev = statistics.stdev(temp_list)
+    return normalize_list(temp_list)
 
-    logging.info(f"{temp_list} {mean} {stddev}")
-    # Filter values within 1 standard deviation
-    filtered = [x for x in temp_list if abs(x - mean) <= stddev]
 
-    if not filtered:
-        return float('nan')
+def get_outdoor_temp(reading_count=8):
+    temp_list = []
+    humidity_list = []
 
-    return statistics.mean(temp_list)
+    try:
+        while len(temp_list) < reading_count:
+            temperature_c = dht_device.temperature
+            temperature_f = temperature_c * (9 / 5) + 32
+
+            temp_list.append(temperature_f)
+
+            humidity = dht_device.humidity
+            humidity_list.append(humidity)
+
+            print("Temp:{:.1f} C / {:.1f} F    Humidity: {}%".format(temperature_c, temperature_f, humidity))
+            time.sleep(0.5)
+    except RuntimeError as err:
+        print(err.args[0])
+        return float('nan'), float('nan')
+
+    return normalize_list(temp_list), normalize_list(humidity_list)
 
 
 if __name__ == "__main__":
-    v = normalized_temperature_reading()
+    v = get_pool_temp()
     now_iso = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
-    print(f"{now_iso}, {v}")
+    ot, oh = get_outdoor_temp()
+    print(f"{now_iso}, {v}, {ot}, {oh}")
+
 
