@@ -20,14 +20,14 @@ def make_graph():
 
     fig, ax = plt.subplots(figsize=(10, 5))
 
-    ax.plot(df_filtered["timestamp"], df_filtered["temperature"], marker='.', linestyle='-')
+    ax.plot(df_filtered["timestamp"], df_filtered["temperature"], marker=',', linestyle='-')
 
-    ax.set_ylim(50, 100)
+    ax.set_ylim(60, 95)
 
     ax.set_xlim(start_day, latest_day + timedelta(days=1))
 
     ax.xaxis.set_major_locator(mdates.HourLocator(interval=12))
-    ax.xaxis.set_major_formatter(mdates.DateFormatter('%a %m-%d', tz=df_filtered["timestamp"].dt.tz))
+    ax.xaxis.set_major_formatter(mdates.DateFormatter('%a %m-%d : %H', tz=df_filtered["timestamp"].dt.tz))
 
     ax.set_title("Temperature Over the Last 5 Days")
     ax.set_xlabel("Date (Chicago Time)")
