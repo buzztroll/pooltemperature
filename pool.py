@@ -71,8 +71,8 @@ def get_outdoor_temp(reading_count=8):
             logging.info("Temp:{:.1f} C / {:.1f} F    Humidity: {}%".format(temperature_c, temperature_f, humidity))
             time.sleep(0.5)
     except RuntimeError as err:
-        print(err.args[0])
-        return float('nan'), float('nan')
+        logging.error(err.args[0])
+        return float(0.0), float(0.0)
 
     return normalize_list(temp_list), normalize_list(humidity_list)
 
