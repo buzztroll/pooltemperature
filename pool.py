@@ -54,12 +54,12 @@ def get_pool_temp(reading_count=8):
     return normalize_list(temp_list)
 
 
-def get_outdoor_temp(reading_count=8):
+def get_outdoor_temp(reading_count=12):
     temp_list = []
     humidity_list = []
 
-    try:
-        while len(temp_list) < reading_count:
+    while len(temp_list) < reading_count:
+        try:
             temperature_c = dht_device.temperature
             temperature_f = temperature_c * (9 / 5) + 32
 
@@ -69,10 +69,9 @@ def get_outdoor_temp(reading_count=8):
             humidity_list.append(humidity)
 
             logging.info("Temp:{:.1f} C / {:.1f} F    Humidity: {}%".format(temperature_c, temperature_f, humidity))
-            time.sleep(0.5)
-    except RuntimeError as err:
-        logging.error(err.args[0])
-        return float(0.0), float(0.0)
+            time.sleep(5)
+        except RuntimeError as err:
+            logging.error(err.args[0])
 
     return normalize_list(temp_list), normalize_list(humidity_list)
 
