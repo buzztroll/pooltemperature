@@ -32,7 +32,7 @@ def normalize_list(temp_list):
     return statistics.mean(temp_list)
 
 
-def get_pool_temp(reading_count=8):
+def get_pool_temp(reading_count=5):
     device = glob.glob("/sys/bus/w1/devices/" + "28*")[0] + "/w1_slave"
 
     temp_list = []
@@ -70,7 +70,7 @@ def get_outdoor_temp(reading_count=12):
 
             logging.info("Temp:{:.1f} C / {:.1f} F  Humidity: {}%".format(temperature_c, temperature_f, humidity))
             time.sleep(5)
-        except RuntimeError as err:
+        except Exception as err:
             logging.error(err.args[0])
 
     return normalize_list(temp_list), normalize_list(humidity_list)
