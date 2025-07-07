@@ -8,7 +8,7 @@ import pool
 
 sender_email = "buzztroll@gmail.com"
 app_password = os.getenv('SHIRK_POOL_EMAIL_PW')
-receiver_email = "buzztroll@gmail.com, cindyconnelly@hotmail.com"
+receiver_email = "buzztroll@gmail.com, cindyconnelly@hotmail.com, wrshirk@yahoo.com"
 
 image_path = "temperature_plot.png"
 temperature = pool.get_pool_temp(reading_count=1)

@@ -21,7 +21,7 @@ def make_graph():
     fig, ax = plt.subplots(figsize=(10, 5))
 
     ax.plot(df_filtered["timestamp"], df_filtered["temperature"], label="pool", marker=',', linestyle='-', color='blue')
-    ax.plot(df_filtered["timestamp"], df_filtered["outdoor"], label="outdoor", marker='.', linestyle='-', color='green')
+#    ax.plot(df_filtered["timestamp"], df_filtered["outdoor"], label="outdoor", marker='.', linestyle='-', color='green')
 
     ax.set_ylim(60, 95)
 
