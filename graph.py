@@ -19,30 +19,34 @@ def make_graph():
     df_filtered = df[mask]
 
     fig, ax = plt.subplots(figsize=(10, 5))
-
-    ax.plot(df_filtered["timestamp"], df_filtered["temperature"], label="pool", marker=',', linestyle='-', color='blue')
-#    ax.plot(df_filtered["timestamp"], df_filtered["outdoor"], label="outdoor", marker='.', linestyle='-', color='green')
-
+    # Left Y-axis
+    ax.plot(df_filtered["timestamp"], df_filtered["temperature"], label="pool", color="blue")
+    ax.plot(df_filtered["timestamp"], df_filtered["outdoor"], label="outdoor", color="green")
+    ax.set_ylabel("Temperature (°F)")
     ax.set_ylim(60, 95)
 
-    ax.set_xlim(start_day, latest_day + timedelta(days=1))
+    # Right Y-axis for humidity
+    ax2 = ax.twinx()
+    ax2.plot(df_filtered["timestamp"], df_filtered["humidity"], label="humidity", color="orange", linestyle="--")
+    ax2.set_ylabel("Humidity (%)", color='orange')
+    ax2.tick_params(axis='y', labelcolor='orange')
+    ax2.set_ylim(0, 100)
 
+    # Time formatting
+    ax.set_xlim(start_day, latest_day + timedelta(days=1))
     ax.xaxis.set_major_locator(mdates.HourLocator(interval=12))
     ax.xaxis.set_major_formatter(mdates.DateFormatter('%a %m-%d : %H', tz=df_filtered["timestamp"].dt.tz))
+    for label in ax.get_xticklabels():
+        label.set_rotation(45)
 
-    ax.set_title("Temperature Over the Last 5 Days")
+    # Combined legend
+    lines1, labels1 = ax.get_legend_handles_labels()
+    lines2, labels2 = ax2.get_legend_handles_labels()
+    ax.legend(lines1 + lines2, labels1 + labels2, loc="upper left")
+
+    ax.set_title("Temperature and Humidity Over the Last 5 Days")
     ax.set_xlabel("Date (Chicago Time)")
-    ax.set_ylabel("Temperature (°F)")
-
-    # ax2 = ax.twinx()
-    # ax2.plot(df_filtered["timestamp"], df_filtered["humidity"], label="humidity", linestyle='--', color='orange')
-    # ax2.set_ylabel("Humidity (%)", color='orange')
-    # ax2.tick_params(axis='y', labelcolor='orange')
-
-    plt.xticks(rotation=45)
     ax.grid(True)
-
-    plt.legend()
     plt.tight_layout()
     plt.savefig("temperature_plot.png", dpi=300)
 
