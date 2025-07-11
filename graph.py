@@ -23,7 +23,7 @@ def make_graph():
     ax.plot(df_filtered["timestamp"], df_filtered["temperature"], label="pool", color="blue")
     ax.plot(df_filtered["timestamp"], df_filtered["outdoor"], label="outdoor", color="green")
     ax.set_ylabel("Temperature (°F)")
-    ax.set_ylim(60, 95)
+    ax.set_ylim(60, 100)
 
     # Right Y-axis for humidity
     ax2 = ax.twinx()
