@@ -17,7 +17,7 @@ logging.basicConfig(
 # Load the data
 
 def make_graph(days_back=5):
-    df = pd.read_csv("output.csv")
+    df = pd.read_csv("data.csv")
 
     df["timestamp"] = pd.to_datetime(df["timestamp"], format="%Y-%m-%dT%H:%M:%SZ", utc=True)
 
