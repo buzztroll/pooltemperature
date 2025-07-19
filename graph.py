@@ -17,7 +17,8 @@ logging.basicConfig(
 # Load the data
 
 def make_graph(days_back=5):
-    df = pd.read_csv("data.csv")
+    df = pd.read_csv("output.csv")
+
     df["timestamp"] = pd.to_datetime(df["timestamp"], format="%Y-%m-%dT%H:%M:%SZ", utc=True)
 
     df["timestamp"] = df["timestamp"].dt.tz_convert("America/Chicago")
@@ -28,17 +29,13 @@ def make_graph(days_back=5):
     mask = (df["timestamp"] >= start_day) & (df["timestamp"] < latest_day + timedelta(days=1))
     df_filtered = df[mask]
 
-
-    logging.info(f"check 1")
-
     fig, ax = plt.subplots(figsize=(10, 5))
     # Left Y-axis
     ax.plot(df_filtered["timestamp"], df_filtered["temperature"], label="pool", color="blue")
     ax.plot(df_filtered["timestamp"], df_filtered["outdoor"], label="outdoor", color="green")
+    ax.plot(df_filtered["timestamp"], df_filtered["dewpoint"], label="dewpoint", color="red")
     ax.set_ylabel("Temperature (°F)")
     ax.set_ylim(60, 100)
-
-    logging.info(f"check 2")
 
     # Right Y-axis for humidity
     ax2 = ax.twinx()
@@ -47,8 +44,6 @@ def make_graph(days_back=5):
     ax2.tick_params(axis='y', labelcolor='orange')
     ax2.set_ylim(0, 100)
 
-    logging.info(f"check 3")
-
     interval = int((days_back * 24) / 10)
     # Time formatting
     ax.set_xlim(start_day, latest_day + timedelta(days=1))
@@ -56,8 +51,6 @@ def make_graph(days_back=5):
     ax.xaxis.set_major_formatter(mdates.DateFormatter('%a %m-%d : %H', tz=df_filtered["timestamp"].dt.tz))
     for label in ax.get_xticklabels():
         label.set_rotation(45)
-
-    logging.info(f"check 4")
 
     # Combined legend
     lines1, labels1 = ax.get_legend_handles_labels()
@@ -76,4 +69,8 @@ def main(db):
 
 
 if __name__ == '__main__':
-    main(int(sys.argv[1]))
+    try:
+        db = int(sys.argv[1])
+    except:
+        db = 5
+    main(db)
