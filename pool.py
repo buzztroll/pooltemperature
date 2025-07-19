@@ -57,6 +57,7 @@ def get_pool_temp(reading_count=5):
 def get_outdoor_temp(reading_count=12):
     temp_list = []
     humidity_list = []
+    error = 0
 
     while len(temp_list) < reading_count:
         try:
@@ -72,6 +73,10 @@ def get_outdoor_temp(reading_count=12):
             time.sleep(5)
         except Exception as err:
             logging.error(err.args[0])
+            error = error + 1
+            if error > 5:
+                return None, None
+            time.sleep(3)
 
     return normalize_list(temp_list), normalize_list(humidity_list)
 
@@ -80,6 +85,9 @@ if __name__ == "__main__":
     v = get_pool_temp()
     now_iso = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     ot, oh = get_outdoor_temp()
-    print(f"{now_iso}, {v}, {ot}, {oh}")
+    if ot is None or oh is None:
+        print(f"{now_iso}, {v}")
+    else:
+        print(f"{now_iso}, {v}, {ot}, {oh}")
 
 
